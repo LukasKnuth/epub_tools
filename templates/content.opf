@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="db-id" version="3.0">
+	<metadata>
+	  <dc:title id="t1">{{title}}</dc:title>
+	  <dc:creator opf:role="aut">{{author}}</dc:creator>
+	  <meta property="dcterms:modified">{{time}}</meta>
+	  <dc:language>en</dc:language>
+	</metadata>
+
+	<manifest>
+		<item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav" />
+		{{#each files}}
+	  <item id="{{id}}" href="{{file}}" media-type="application/xhtml+xml" />
+		{{/each}}
+	</manifest>
+
+	<spine toc="ncx">
+		<itemref idref="toc" />
+		{{#each files}}
+		<itemref idref="{{id}}" />
+		{{/each}}
+	</spine>
+
+</package>
