@@ -98,3 +98,6 @@ While processing the Markdown, collect all referenced images and put them into t
 Lastly, we can use Markdowns reference style (where links dont't use the URL but a number and then define the numbers at the bottom) to do footnotes perhaps?
 
 Some things like tables might need to be kept though, but we can do that...
+
+* More good writing on EPUB stuff at https://epubknowledge.com/docs/
+* Got a simple CSS boilerplate from http://bbebooksthailand.com/bb-CSS-boilerplate.html
