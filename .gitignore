@@ -1,10 +1,7 @@
 # Package managers
 node_modules/
 .venv/
-
-# Output
-*.xhtml
-*.html
+*.epub
 
 # Article stuff
 c*/
