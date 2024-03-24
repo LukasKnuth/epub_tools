@@ -9,6 +9,7 @@
 
 	<manifest>
 		<item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav" />
+		<item id="style" href="CSS/style.css" media-type="text/css" />
 		{{#each files}}
 	  <item id="{{id}}" href="{{file}}" media-type="application/xhtml+xml" />
 		{{/each}}
