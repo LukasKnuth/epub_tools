@@ -8,6 +8,7 @@ const fs = require("fs")
 const path = require("path")
 
 // setup
+const base_path = path.join(process.cwd(), process.argv[2])
 marked.use(markedXhtml())
 
 const articleTemplate = Handlebars.compile(fs.readFileSync("templates/article.xhtml").toString())
@@ -65,7 +66,7 @@ function writeManifest(zip, files) {
   zip.file("content.opf", manifestTemplate({files, toc}))
 }
 
-const articles = listDirectory(process.argv[2]).filter(markdownFile).map(parseArticle)
+const articles = listDirectory(base_path).filter(markdownFile).map(parseArticle)
 const zip = setupZip()
 const folder = zip.folder("OEBPS")
 const toc = articles.flatMap(a => writeArticle(folder, a))
