@@ -47,7 +47,7 @@ function setupZip() {
     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
   </rootfiles>
 </container>`)
-  zip.folder("OEBPS").folder("CSS").file("style.css", fs.readFileSync("templates/style.css"))
+  zip.folder("OEBPS").folder("css").file("style.css", fs.readFileSync("templates/style.css"))
   return zip
 }
 
