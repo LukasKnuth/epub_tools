@@ -40,7 +40,7 @@ function parseArticle(file) {
   const matter = frontMatter.safeLoadFront(content)
   // file-name without the extension
   matter.id = path.parse(file).name
-  // TODO matter.date = format(matter.date, "")
+  matter.date = format(matter.date, "MMM do, yyy")
   return matter
 }
 
