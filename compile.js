@@ -56,20 +56,19 @@ function writeArticle(zip, article) {
   const rendered = articleTemplate({...article, content})
   const file = article.id+".xhtml"
   zip.file(file, rendered)
-  return {file, id: article.id, title: article.title}
+  return [{file, id: article.id, title: article.title, mimetype: "application/xhtml+xml"}]
 }
 
-function writeManifest(zip, toc) {
-  const file = "toc.xhtml"
-  zip.file(file, tocTemplate({toc}))
-  // TODO Also needs CSS and Images!
-  zip.file("content.opf", manifestTemplate({files: toc}))
+function writeManifest(zip, files) {
+  const toc = files.filter(f => !!f.title)
+  zip.file("toc.xhtml", tocTemplate({toc}))
+  zip.file("content.opf", manifestTemplate({files, toc}))
 }
 
 const articles = listDirectory(process.argv[2]).filter(markdownFile).map(parseArticle)
 const zip = setupZip()
 const folder = zip.folder("OEBPS")
-const toc = articles.map(a => writeArticle(folder, a))
+const toc = articles.flatMap(a => writeArticle(folder, a))
 writeManifest(folder, toc)
 zip.generateNodeStream()
   .pipe(fs.createWriteStream("out.epub"))

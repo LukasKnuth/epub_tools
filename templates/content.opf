@@ -10,16 +10,16 @@
 	<manifest>
 	  <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav" />
 	  <item id="style" href="css/style.css" media-type="text/css" />
-		{{#each files}}
-	  <item id="{{id}}" href="{{file}}" media-type="application/xhtml+xml" />
-		{{/each}}
+	  {{#each files}}
+	  <item id="{{id}}" href="{{file}}" media-type="{{mimetype}}" />
+	  {{/each}}
 	</manifest>
 
 	<spine toc="ncx">
-		<itemref idref="toc" />
-		{{#each files}}
-		<itemref idref="{{id}}" />
-		{{/each}}
+	  <itemref idref="toc" />
+	  {{#each toc}}
+	  <itemref idref="{{id}}" />
+	  {{/each}}
 	</spine>
 
 </package>
