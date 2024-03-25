@@ -22,6 +22,12 @@ font-size: 100%;
 vertical-align: baseline;
 }
 
+/* Correct new HTML5 elements in legacy readers */
+article, aside, figure, figcaption, 
+footer, header, main, nav, section {
+  display: block;
+}
+
 table
 {
 border-collapse: collapse;
@@ -160,6 +166,23 @@ text-align: left;
 img
 {
 max-width: 100%;
+}
+
+/* Stolen from https://ebooks.stackexchange.com/a/1280 */
+figure
+{
+width: 80%;
+margin: 1em 10%;
+}
+
+figure img
+{
+width: 100%;
+}
+
+figcaption
+{
+text-align: center;
 }
 
 /*==TABLES==*/
