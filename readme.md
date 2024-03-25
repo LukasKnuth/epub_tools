@@ -101,3 +101,14 @@ Some things like tables might need to be kept though, but we can do that...
 
 * More good writing on EPUB stuff at https://epubknowledge.com/docs/
 * Got a simple CSS boilerplate from http://bbebooksthailand.com/bb-CSS-boilerplate.html
+
+## Downloading
+
+Got another idea for downloading from https://news.ycombinator.com/item?id=39810378
+
+```bash
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+    --headless --incognito --dump-dom https://github.com > /tmp/github.html
+```
+
+**NOTE** This is different from the `wget` command, because it downloads the page _after_ the JavaScript has run. This allows getting pages that rely heavily on it.
