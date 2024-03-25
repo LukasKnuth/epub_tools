@@ -4,6 +4,7 @@ const frontMatter = require("yaml-front-matter")
 const Handlebars = require("handlebars")
 const { format } = require("date-fns")
 const JSZip = require("jszip")
+const mime = require("mime-types")
 const fs = require("fs")
 const path = require("path")
 
@@ -56,12 +57,40 @@ function setupZip() {
   return zip
 }
 
+function writeImages(tokens, base_path, article_id, zip, results) {
+  for (const token of tokens) {
+    if (token.type === "image") {
+      const full_path = path.join(base_path, token.href)
+      if (fs.existsSync(full_path)) {
+        const file = path.parse(full_path)
+        const zip_path = `img/${article_id}/${file.base}`
+        // add to Zip
+        zip.file(zip_path, fs.createReadStream(full_path))
+        // Rewrite href
+        token.href = zip_path
+        // add to manifest
+        const mimetype = mime.lookup(file.ext)
+        results.push({file: zip_path, id: `${article_id}-${file.name}`, mimetype})
+      } else {
+        console.warn(`Image ${full_path} not found. Ignoring...`)
+      }
+    } else {
+      if ((token.tokens || []).length > 0) {
+        writeImages(token.tokens, base_path, article_id, zip, results)
+      }
+    }
+  }
+  return results
+}
+
 function writeArticle(zip, article) {
-  const content = marked.parse(article.__content)
+  const tokens = marked.lexer(article.__content)
+  const image_files = writeImages(tokens, base_path, article.id, zip, [])
+  const content = marked.parser(tokens)
   const rendered = articleTemplate({...article, content})
   const file = article.id+".xhtml"
   zip.file(file, rendered)
-  return [{file, id: article.id, title: article.title, mimetype: "application/xhtml+xml"}]
+  return [{file, id: article.id, title: article.title, mimetype: "application/xhtml+xml"}, ...image_files]
 }
 
 function writeManifest(zip, files) {
