@@ -10,6 +10,10 @@ const path = require("path")
 // setup
 const base_path = path.join(process.cwd(), process.argv[2])
 marked.use(markedXhtml())
+marked.use({renderer: {image: (href, title, text) => {
+  // Make sure images are always block elements and presented stand-alone
+  return `<figure><img src="${href}"/><figcaption>${text}</figcaption></figure>`
+}}})
 
 const articleTemplate = Handlebars.compile(fs.readFileSync("templates/article.xhtml").toString())
 const tocTemplate = Handlebars.compile(fs.readFileSync("templates/toc.xhtml").toString())
