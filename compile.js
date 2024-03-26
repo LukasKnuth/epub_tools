@@ -27,9 +27,13 @@ marked.use({renderer: {image: (href, title, text) => {
   return `<figure><img src="${href}"/><figcaption>${text}</figcaption></figure>`
 }}})
 
-const articleTemplate = Handlebars.compile(fs.readFileSync("templates/article.xhtml").toString())
-const tocTemplate = Handlebars.compile(fs.readFileSync("templates/toc.xhtml").toString())
-const manifestTemplate = Handlebars.compile(fs.readFileSync("templates/content.opf").toString())
+function loadTemplate(path) {
+  return Handlebars.compile(fs.readFileSync(path, "utf8").toString())
+}
+
+const articleTemplate = loadTemplate("templates/article.xhtml")
+const tocTemplate = loadTemplate("templates/toc.xhtml")
+const manifestTemplate = loadTemplate("templates/content.opf")
 
 function listDirectory(folder) {
   return fs.readdirSync(folder, {recursive: false, withFileTypes: true}).filter(f => {
@@ -64,7 +68,7 @@ function setupZip() {
     <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
   </rootfiles>
 </container>`)
-  zip.folder("OEBPS").folder("css").file("style.css", fs.readFileSync("templates/style.css"))
+  zip.folder("OEBPS").folder("css").file("style.css", fs.readFileSync("templates/style.css", "utf8"))
   return zip
 }
 
