@@ -105,7 +105,7 @@ function writeArticle(zip, article) {
 
 function writeManifest(zip, files) {
   const toc = files.filter(f => !!f.title)
-  zip.file("toc.xhtml", tocTemplate({toc}))
+  zip.file("toc.xhtml", tocTemplate({toc, title: args.title, author: args.author}))
   zip.file("content.opf", manifestTemplate({
     files, toc, author: args.author, title: args.title, modified: formatISO(new Date())
   }))

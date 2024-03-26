@@ -5,8 +5,11 @@
   <link href="css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+  <header id="book-title">
+    <h1 epub:type="title">{{title}}</h1>
+    <p>By <b>{{author}}</b>.</p>
+  </header>
   <nav id="toc" epub:type="toc">
-    <h1 class="frontmatter">Table of Contents</h1>
     <ol class="contents">
     {{#each toc}}
       <li><a href="{{file}}">{{title}}</a></li>

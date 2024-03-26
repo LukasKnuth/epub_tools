@@ -219,3 +219,16 @@ text-align: left;
 font-size: 0.9em;
 }
 
+/*==TOC and Header==*/
+
+header#book-title
+{
+border-bottom: 1px solid black;
+padding-bottom: 20px;
+margin-bottom: 20px;
+}
+
+header#book-title p
+{
+text-align: center;
+}
