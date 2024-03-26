@@ -1,43 +1,41 @@
 const { JSDOM } = require("jsdom")
 const { Readability } = require("@mozilla/readability")
-const prettier = require("prettier")
 const TurndownService = require("turndown")
 const fs = require("fs")
+const path = require("path")
 
-const file = fs.readFileSync(process.argv[2])
-const doc = new JSDOM(file)
+function simplify(html) {
+	const doc = new JSDOM(html)
+	const reader = new Readability(doc.window.document)
+	return reader.parse()
+}
 
-// Reduce full file to content only:
-const reader = new Readability(doc.window.document)
-const parsed = reader.parse()
+function generateMarkdown(readable) {
+	const td = new TurndownService({
+		headingStyle: "atx",
+		bulletListMarker: "-",
+		codeBlockStyle: "fenced"
+	})
+	td.keep(["table"])
+	return td.turndown(readable.content)
+}
 
-// Remove additional noise
-const article = JSDOM.fragment(parsed.content)
-article.querySelectorAll("img").forEach(e => {
-	// todo change img path to reflect relative in ebook
-	console.log("Used image: "+e.getAttribute("src"))
-})
-
-const td = new TurndownService({
-	headingStyle: "atx",
-	bulletListMarker: "-",
-	codeBlockStyle: "fenced"
-})
-td.keep(["table"])
-const out = td.turndown(article)
-
-
-// Setup scaffolding
-// TODO write YAML header with title, description, author, etz.
-const header = `---
-title: ${parsed.title}
-source: ${parsed.siteName}
-date: ${parsed.publishedTime}
-author: ${parsed.byline}
-description: ${parsed.excerpt}
+function generateFrontMatter(readable) {
+	// NOTE: Can't correctly indent this because then front-matter in the file is indented and breaks YAML
+	return `---
+title: ${readable.title}
+source: ${readable.siteName}
+date: ${readable.publishedTime}
+author: ${readable.byline}
+description: ${readable.excerpt}
 ---
 
 `
+}
 
-// Write result
-fs.writeFileSync("out.md", header+out)
+const full_path = path.join(process.cwd(), process.argv[2])
+const file = fs.readFileSync(full_path)
+const simple = simplify(file)
+const output = generateFrontMatter(simple) + generateMarkdown(simple)
+const source_file = path.parse(full_path)
+fs.writeFileSync(path.join(source_file.dir, source_file.name + ".md"), output)
