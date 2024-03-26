@@ -2,13 +2,14 @@ const { marked } = require("marked")
 const { markedXhtml } = require("marked-xhtml")
 const frontMatter = require("yaml-front-matter")
 const Handlebars = require("handlebars")
-const { format, formatISO } = require("date-fns")
+const { format } = require("date-fns")
 const JSZip = require("jszip")
 const mime = require("mime-types")
 const yargs = require("yargs")
 const { hideBin } = require("yargs/helpers")
 const fs = require("fs")
 const path = require("path")
+const { randomUUID } = require("crypto")
 
 // parse cli arguments
 const args = yargs(hideBin(process.argv))
@@ -107,7 +108,8 @@ function writeManifest(zip, files) {
   const toc = files.filter(f => !!f.title)
   zip.file("toc.xhtml", tocTemplate({toc, title: args.title, author: args.author}))
   zip.file("content.opf", manifestTemplate({
-    files, toc, author: args.author, title: args.title, modified: formatISO(new Date())
+    files, toc, author: args.author, title: args.title,
+    modified: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), uuid: randomUUID()
   }))
 }
 

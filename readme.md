@@ -101,6 +101,7 @@ Some things like tables might need to be kept though, but we can do that...
 
 * More good writing on EPUB stuff at https://epubknowledge.com/docs/
 * Got a simple CSS boilerplate from http://bbebooksthailand.com/bb-CSS-boilerplate.html
+* Some more on EPUB metadata: https://readium.org/architecture/streamer/parser/metadata.html
 
 ## Downloading
 
@@ -112,3 +113,9 @@ Got another idea for downloading from https://news.ycombinator.com/item?id=39810
 ```
 
 **NOTE** This is different from the `wget` command, because it downloads the page _after_ the JavaScript has run. This allows getting pages that rely heavily on it.
+
+## iBooks and validation
+
+The EPub worked fine with KOReader, but it could not be imported in iBooks. I found https://www.w3.org/publishing/epubcheck/ to check the EPubs and it found some fatal issues with my XML.
+
+I updated a bunch of properties required for the `content.opf` file and added a unique UUID to the file. There are still errors, but none of them are about missing metadata in that file.

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="db-id" version="3.0">
-	<metadata>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" dir="ltr" version="3.0">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	  <dc:identifier id="uid">urn:uuid:{{uuid}}</dc:identifier>
 	  <dc:title id="t1">{{title}}</dc:title>
-	  <dc:creator opf:role="aut">{{author}}</dc:creator>
-	  <dc:date opf:event="modification">{{modified}}</dc:date>
+	  <dc:creator id="author">{{author}}</dc:creator>
+	  <dc:date>{{modified}}</dc:date>
+	  <meta property="dcterms:modified">{{modified}}</meta>
 	  <dc:language>en</dc:language>
 	</metadata>
 
@@ -15,7 +17,7 @@
 	  {{/each}}
 	</manifest>
 
-	<spine toc="ncx">
+	<spine>
 	  <itemref idref="toc" />
 	  {{#each toc}}
 	  <itemref idref="{{id}}" />
