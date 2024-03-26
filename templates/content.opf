@@ -3,7 +3,7 @@
 	<metadata>
 	  <dc:title id="t1">{{title}}</dc:title>
 	  <dc:creator opf:role="aut">{{author}}</dc:creator>
-	  <meta property="dcterms:modified">{{time}}</meta>
+	  <dc:date opf:event="modification">{{modified}}</dc:date>
 	  <dc:language>en</dc:language>
 	</metadata>
 

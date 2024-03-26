@@ -2,14 +2,24 @@ const { marked } = require("marked")
 const { markedXhtml } = require("marked-xhtml")
 const frontMatter = require("yaml-front-matter")
 const Handlebars = require("handlebars")
-const { format } = require("date-fns")
+const { format, formatISO } = require("date-fns")
 const JSZip = require("jszip")
 const mime = require("mime-types")
+const yargs = require("yargs")
+const { hideBin } = require("yargs/helpers")
 const fs = require("fs")
 const path = require("path")
 
+// parse cli arguments
+const args = yargs(hideBin(process.argv))
+  .command("* <folder>", "create an EPUB from the given directory", argv => {
+    argv.positional("folder", {type: "string"})
+      .alias("a", "author")
+      .alias("t", "title")
+  }).parseSync()
+
 // setup
-const base_path = path.join(process.cwd(), process.argv[2])
+const base_path = path.join(process.cwd(), args.folder)
 marked.use(markedXhtml())
 marked.use({renderer: {image: (href, title, text) => {
   // Make sure images are always block elements and presented stand-alone
@@ -96,7 +106,9 @@ function writeArticle(zip, article) {
 function writeManifest(zip, files) {
   const toc = files.filter(f => !!f.title)
   zip.file("toc.xhtml", tocTemplate({toc}))
-  zip.file("content.opf", manifestTemplate({files, toc}))
+  zip.file("content.opf", manifestTemplate({
+    files, toc, author: args.author, title: args.title, modified: formatISO(new Date())
+  }))
 }
 
 const articles = listDirectory(base_path).filter(markdownFile).map(parseArticle)
