@@ -25,6 +25,14 @@ marked.use(markedXhtml())
 marked.use({renderer: {image: (href, title, text) => {
   // Make sure images are always block elements and presented stand-alone
   return `<figure><img src="${href}"/><figcaption>${text}</figcaption></figure>`
+}, paragraph: (text) => {
+  // <figure> inside <p> is invalid HTML/XHTML. Make sure we don't wrap them
+  // Stolen from https://github.com/markedjs/marked/issues/773
+  if (text.startsWith("<figure") && text.endsWith("</figure>")) {
+    return text;
+  } else {
+    return `<p>${text}</p>`
+  }
 }}})
 
 function loadTemplate(path) {
