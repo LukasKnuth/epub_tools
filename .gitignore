@@ -1,10 +1,10 @@
 # Package managers
 node_modules/
-.venv/
 *.epub
 
-# Article stuff
-c*/
-images/
-low-tech-magazine_how-to-build-a-low-tech-internet/
+# The linter tool
+epubcheck/
+
+# Test book
+book/
 
