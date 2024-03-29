@@ -69,10 +69,10 @@ It's a first step when EPUBs are not opened correctly by your chosen reader.
 The output has been tested with the following readers:
 
 | Reader | Platform | Issues |
-------------------------------
-| [KOReader](https://github.com/koreader/koreader) | Desktop | None |
-| KOReader | PocketBook | None |
-| iBooks | MacOS | Pages can appear empty. Change any rendering setting (like font size) and content should appear |
+| --- | --- | --- |
+| [KOReader](https://github.com/koreader/koreader) | Desktop | :white_check_mark: None |
+| KOReader | PocketBook | :white_check_mark: None |
+| iBooks | MacOS | :warning: Pages can appear empty. Change any rendering setting (like font size) and content should appear |
 
 # Customization
 
