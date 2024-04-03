@@ -1,16 +1,15 @@
 # EPUB tools
 
-These are some _really simple_ scripts to help create EPUB files from online articles.
-There are more complete tools out there.
+Some _really simple_ scripts to help create EPUB files from online articles.
 
+There are more complete tools out there.
 My main focus is:
 
-* A process that doesn't assume anything
 * Understandable, simple code
-* Very simple output that doesn't assume much
+* Human readable file formats that allow manual edits
 * Easily customizable - just clone the repo
 
-An example workflow to download a bunch of articles and convert them to an EPUB.
+Here is an example workflow to download a bunch of articles and convert them to an EPUB.
 
 ## 0. Installation
 
@@ -35,7 +34,7 @@ For websites which render using JavaScript, you'll need to use an actual Browser
 
 ## 2. Simplify to Markdown
 
-We'll use Markdown as our itermediate format.
+We'll use Markdown as our intermediate format.
 To simplify the downloaded `index.html` which we just got with "wget", run the tool
 
 ```bash
@@ -43,7 +42,7 @@ node simplify.js folder/index.html
 ```
 
 This will create a new file to `folder/index.md`.
-The file might require manual cleanup afterwards.
+The file might require manual cleanup afterward.
 You can specify multiple HTML files to the script, it will create the output files with the same name in the same folder.
 
 ## 3. Bundle to EPUB
@@ -55,7 +54,7 @@ node bundle.js folder --author "Somebody" --title "Your Book"
 ```
 
 Specify the folder in which _all_ Markdown files are located.
-Optionally, you can specify author and title for the EPUB metadat.
+Optionally, you can specify author and title for the EPUB metadata.
 
 The files will be added to the EPUB in the order in which they appear in the folder.
 To influence the order, you can prefix the filenames with numbers.
@@ -83,5 +82,5 @@ The output has been tested with the following readers:
 
 * [EPUB specification](https://www.w3.org/TR/epub-33/)
 * [StandardEbooks to steal ideas from](https://github.com/standardebooks)
-* [Epub Knowledge Docs](https://epubknowledge.com/)
+* [EPUB Knowledge Docs](https://epubknowledge.com/)
 
