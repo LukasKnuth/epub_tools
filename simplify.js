@@ -1,8 +1,18 @@
 const { JSDOM } = require("jsdom")
 const { Readability } = require("@mozilla/readability")
 const TurndownService = require("turndown")
+const yargs = require("yargs")
+const { hideBin } = require("yargs/helpers")
 const fs = require("fs")
 const path = require("path")
+
+// parse cli arguments
+const args = yargs(hideBin(process.argv))
+  .command("* <files..>", "extract content from given HTML files to Markdown", argv => {
+    // NOTE: in the command above, the value in `<>` must match the positonal arg.
+    // ALSO: The `..` in there means "this is an array"
+    argv.positional("files", {type: "string", normalize: true, default: []})
+  }).parseSync()
 
 function simplify(html) {
 	const doc = new JSDOM(html)
@@ -33,7 +43,7 @@ description: ${readable.excerpt}
 `
 }
 
-for (const arg of process.argv.slice(2)) {
+for (const arg of args.files) {
 	const full_path = path.join(process.cwd(), arg)
 	console.log(`Processing ${full_path}...`)
 	const file = fs.readFileSync(full_path, "utf8")
