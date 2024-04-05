@@ -20,14 +20,14 @@ Simply clone this repo, run `npm i` to install dependencies and run the scripts 
 To download an article and all required assets, we can use `wget` like this:
 
 ```bash
-wget --page-requisites --convert-links --span-hosts --no-directories https://www.example.com
+wget -p -k -H -nd -P chapter1 https://cool.site/some-article
 ```
 
-* It downloads the page you point it to into the current directory
-* Alongside the page, it downloads all styles/images/scripts (`--page-requirements`)
-* All assets are downloaded into a single, flat directory (`--no-directories`)
-* Even if the assets are from different hosts (`--span-hosts`)
-* Then all links to assets are rewritten to the local path (`--convert-links`)
+* It downloads the page into the given directory (`-P | --directory-prefix`)
+* Alongside the page, it downloads all styles/images/scripts (`-p | --page-requisites`)
+* All assets are downloaded into a single, flat directory (`-nd | --no-directories`)
+* Even if the assets are from different hosts (`-H | --span-hosts`)
+* Then all links to assets are rewritten to the local path (`-k | --convert-links`)
 
 For websites which render using JavaScript, you'll need to use an actual Browser.
 [Chrome can get you stated](https://til.simonwillison.net/chrome/headless)
@@ -38,26 +38,39 @@ We'll use Markdown as our intermediate format.
 To simplify the downloaded `index.html` which we just got with "wget", run the tool
 
 ```bash
-node simplify.js folder/index.html
+node simplify.js chapter1/index.html
 ```
 
-This will create a new file to `folder/index.md`.
-The file might require manual cleanup afterward.
-You can specify multiple HTML files to the script, it will create the output files with the same name in the same folder.
+This will create a new file to `chapter1/index.md`.
+You might want to do some manual cleanup afterward.
+
+You can give multiple HTML files to the script, it will create the output files with the same name in the same folder.
+If your shell has [glob support](https://en.wikipedia.org/wiki/Glob_(programming)), you can do things like:
+
+```bash
+# Imagine we have "chapter1" and "chapter2" folders downloaded in the "book" folder
+node simplify.js book/**/*.html
+```
 
 ## 3. Bundle to EPUB
 
 Once you're happy with the Markdown files, you can bundle them into an EPUB:
 
 ```bash
-node bundle.js folder --author "Somebody" --title "Your Book"
+node bundle.js -a "Author" -t "Title" chapter1/index.md chapter2/index.md
 ```
 
-Specify the folder in which _all_ Markdown files are located.
+Simply list all Markdown files to be bundled into the EPUB.
+The files are added in the order in which they are specified.
+
 Optionally, you can specify author and title for the EPUB metadata.
 
-The files will be added to the EPUB in the order in which they appear in the folder.
-To influence the order, you can prefix the filenames with numbers.
+If your shell has glob support, you can do this:
+
+```bash
+# Again we have "chapter1" and "chapter2" folders downloaded in the "book" folder
+node bundle.js -a "Me" -t "My Book" book/**/*.md
+```
 
 ## 4. Validate
 

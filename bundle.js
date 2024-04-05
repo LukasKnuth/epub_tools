@@ -7,20 +7,22 @@ const JSZip = require("jszip")
 const mime = require("mime-types")
 const yargs = require("yargs")
 const { hideBin } = require("yargs/helpers")
+const sluggify = require("slugify")
 const fs = require("fs")
 const path = require("path")
 const { randomUUID } = require("crypto")
 
 // parse cli arguments
 const args = yargs(hideBin(process.argv))
-  .command("* <folder>", "create an EPUB from the given directory", argv => {
-    argv.positional("folder", {type: "string"})
-      .alias("a", "author")
-      .alias("t", "title")
+  .command("* <files..>", "create an EPUB from the given files", argv => {
+    // NOTE: in the command above, the value in `<>` must match the positonal arg.
+    // ALSO: The `..` in there means "this is an array"
+    argv.positional("files", {type: "string", normalize: true, default: []})
+      .option("author", {alias: "a", type: "string", desc: "Set Book Author"})
+      .option("title", {alias: "t", type: "string", desc: "Set Book Title"})
   }).parseSync()
 
 // setup
-const base_path = path.join(process.cwd(), args.folder)
 marked.use(markedXhtml())
 marked.use({renderer: {image: (href, title, text) => {
   // Make sure images are always block elements and presented stand-alone
@@ -43,27 +45,33 @@ const articleTemplate = loadTemplate("templates/article.xhtml")
 const tocTemplate = loadTemplate("templates/toc.xhtml")
 const manifestTemplate = loadTemplate("templates/content.opf")
 
-function listDirectory(folder) {
-  return fs.readdirSync(folder, {recursive: false, withFileTypes: true}).filter(f => {
-    return f.isFile()
-  }).map(f => path.join(folder, f.name))
+function toAbsolutePath(file) {
+  return path.join(process.cwd(), file)
 }
 
-function markdownFile(file) {
-  if (path.extname(file) === ".md") {
-    return true
-  } else {
-    console.log(`Skipping ${file}, not a markdown file`)
+function markdownFile(file_path) {
+  if (!fs.existsSync(file_path)) {
+    console.log(`Skipping ${file_path}, file not found`)
     return false
+  } else if (path.extname(file_path) !== ".md") {
+    console.log(`Skipping ${file_path}, not a markdown file`)
+    return false
+  } else {
+    return true
   }
+}
+
+function safeSlug(val) {
+  return sluggify(val, {remove: /[*+~.()'"!:@]/g, lower: true, strict: true, trim: true})
 }
 
 function parseArticle(file) {
   const content = fs.readFileSync(file, "utf-8")
   const matter = frontMatter.safeLoadFront(content)
   // file-name without the extension
-  matter.id = path.parse(file).name
+  matter.id = safeSlug(`${matter.title} - ${format(matter.date, "ddMMyy")}`)
   matter.date = format(matter.date, "MMM do, yyy")
+  matter.folder = path.dirname(file)
   return matter
 }
 
@@ -108,7 +116,7 @@ function writeImages(tokens, base_path, article_id, zip, results) {
 
 function writeArticle(zip, article) {
   const tokens = marked.lexer(article.__content)
-  const image_files = writeImages(tokens, base_path, article.id, zip, [])
+  const image_files = writeImages(tokens, article.folder, article.id, zip, [])
   const content = marked.parser(tokens)
   const rendered = articleTemplate({...article, content})
   const file = article.id+".xhtml"
@@ -125,7 +133,7 @@ function writeManifest(zip, files) {
   }))
 }
 
-const articles = listDirectory(base_path).filter(markdownFile).map(parseArticle)
+const articles = args.files.map(toAbsolutePath).filter(markdownFile).map(parseArticle)
 const zip = setupZip()
 const folder = zip.folder("OEBPS")
 const toc = articles.flatMap(a => writeArticle(folder, a))
