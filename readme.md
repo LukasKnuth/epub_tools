@@ -34,7 +34,7 @@ For websites which render using JavaScript, you'll need to use an actual Browser
 
 ## 2. Simplify to Markdown
 
-The scripts use Markdown the intermediate format.
+The scripts use Markdown as its intermediate format.
 To simplify the downloaded `index.html` which we just got with "wget", run the script:
 
 ```bash
@@ -63,7 +63,7 @@ node bundle.js -a "Author" -t "Title" chapter1/index.md chapter2/index.md
 Simply list all Markdown files to be bundled.
 The files are added in the order in which they are listed.
 
-Optionally, you can specify author and title for the EPUB metadata.
+Optionally, you can specify author and title for the EPUB metadata and title page.
 
 If your shell has glob support, you can do this:
 
@@ -78,7 +78,7 @@ You can **optionally** validate the bundled EPUB file using [EPUBCheck](https://
 This can help find issues in articles that can be manually resolved.
 It's a first step when EPUBs are not opened correctly by your chosen reader.
 
-The output has been tested with the following readers:
+The scripts output has been tested with the following readers:
 
 | Reader | Platform | Issues |
 | --- | --- | --- |
