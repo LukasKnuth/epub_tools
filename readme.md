@@ -17,7 +17,7 @@ Simply clone this repo, run `npm i` to install dependencies and run the scripts 
 
 ## 1. Get content
 
-To download an article and all required assets, we can use `wget` like this:
+To download an article and all required assets, you can use `wget` like this:
 
 ```bash
 wget -p -k -H -nd -P chapter1 https://cool.site/some-article
@@ -34,17 +34,17 @@ For websites which render using JavaScript, you'll need to use an actual Browser
 
 ## 2. Simplify to Markdown
 
-We'll use Markdown as our intermediate format.
-To simplify the downloaded `index.html` which we just got with "wget", run the tool
+The scripts use Markdown the intermediate format.
+To simplify the downloaded `index.html` which we just got with "wget", run the script:
 
 ```bash
 node simplify.js chapter1/index.html
 ```
 
-This will create a new file to `chapter1/index.md`.
+This will create a new Markdown file at `chapter1/index.md`.
 You might want to do some manual cleanup afterward.
 
-You can give multiple HTML files to the script, it will create the output files with the same name in the same folder.
+You can give multiple HTML files to the script, it will create the output files with the same name next to the source file.
 If your shell has [glob support](https://en.wikipedia.org/wiki/Glob_(programming)), you can do things like:
 
 ```bash
@@ -60,8 +60,8 @@ Once you're happy with the Markdown files, you can bundle them into an EPUB:
 node bundle.js -a "Author" -t "Title" chapter1/index.md chapter2/index.md
 ```
 
-Simply list all Markdown files to be bundled into the EPUB.
-The files are added in the order in which they are specified.
+Simply list all Markdown files to be bundled.
+The files are added in the order in which they are listed.
 
 Optionally, you can specify author and title for the EPUB metadata.
 
@@ -90,6 +90,8 @@ The output has been tested with the following readers:
 
 * To customize output, simply change the templates in the `templates/` folder.
 * To customize workflow, change the specific script
+* To download a bunch of articles in one command, "wget" has a `-i urls.txt` flag which reads URLs from a file
+* All scripts accept file-paths as arguments - this works nicely with tools like [fzf](https://github.com/junegunn/fzf)
 
 ## Links and Resources
 
